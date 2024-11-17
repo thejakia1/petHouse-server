@@ -5,14 +5,15 @@ require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const ObjectId = require('mongodb').ObjectId;
 
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 5000;
 
+// Updated CORS configuration for deployment
 app.use(cors());
 app.use(express.json());
 
+// MongoDB connection string (unchanged but using environment variable)
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.qmx8p.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
 
 async function run() {
     try {
@@ -28,6 +29,7 @@ async function run() {
         app.get('/products', async (req, res) => {
             const cursor = productsCollection.find({});
             const products = await cursor.toArray();
+            console.log(products, 'products api response');
             res.send({ products });
         });
 
@@ -185,6 +187,6 @@ app.get('/', (req, res) => {
     res.send('Welcome to petHouse Database!!');
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
